@@ -18,6 +18,7 @@ package com.badlogic.gdx.math;
 
 import java.io.Serializable;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.NumberUtils;
 
 /** Encapsulates a 3D vector. Allows chaining operations by returning a reference to itself in all modification methods.
@@ -39,6 +40,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 
 	private final static Matrix4 tmpMat = new Matrix4();
 	private final static Vector3 tmpVec1 = new Vector3();
+	private final static Vector3 tmpVec2 = new Vector3();
 
 	/** Constructs a vector at (0,0,0) */
 	public Vector3 () {
@@ -540,7 +542,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 	public Vector3 median (Vector3[] v) {
 		
 		//Previous median approximation
-		Vector3 prev_m = new Vector3();
+		Vector3 prev_m = tmpVec2;
 		
 		//Current median approximation is this Vector3
 		Vector3 m = this;
@@ -564,7 +566,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 				dist_mk_vi = v_i.dst(prev_m);
 				
 				//If we're on top of one of the input Vector3s, it's the median, return it
-				if(dist_mk_vi < 0.0001f){
+				if(dist_mk_vi < 0.1f){
 					m.set(v_i);
 					return this;
 				}
@@ -583,7 +585,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 			//Update the previous median approximation
 			prev_m.set(m);
 			
-		}while(epsilon > 0.0001f);
+		}while(epsilon > 0.1f);
 		
 		return this;
 	}
@@ -600,7 +602,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 	public Vector3 median (Vector3[] v, float[] w) {
 		
 		//Previous median approximation
-		Vector3 prev_m = new Vector3();
+		Vector3 prev_m = tmpVec2;
 		
 		//Current median approximation is this Vector3
 		Vector3 m = this;
@@ -624,7 +626,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 				dist_mk_vi = v[i].dst(prev_m);
 				
 				//If we're on top of one of the input Vector3s, it's the median, return it
-				if(dist_mk_vi < 0.0001f){
+				if(dist_mk_vi < 0.1f){
 					m.set(v[i]);
 					return this;
 				}
@@ -643,7 +645,7 @@ public class Vector3 implements Serializable, Vector<Vector3> {
 			//Update the previous median approximation
 			prev_m.set(m);
 			
-		}while(epsilon > 0.0001f);
+		}while(epsilon > 0.1f);
 		
 		return this;
 	}

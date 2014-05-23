@@ -18,6 +18,7 @@ package com.badlogic.gdx.math;
 
 import java.io.Serializable;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.NumberUtils;
 
 /** A simple quaternion class.
@@ -31,6 +32,7 @@ public class Quaternion implements Serializable {
 	private static Quaternion tmp1 = new Quaternion(0, 0, 0, 0);
 	private static Quaternion tmp2 = new Quaternion(0, 0, 0, 0);
 	private static Quaternion tmp3 = new Quaternion(0, 0, 0, 0);
+	private static Quaternion tmp4 = new Quaternion(0, 0, 0, 0);
 
 	public float x;
 	public float y;
@@ -792,7 +794,7 @@ public class Quaternion implements Serializable {
 	public Quaternion median (Quaternion[] q) {
 		
 		//Previous median approximation
-		Quaternion prev_m = new Quaternion();
+		Quaternion prev_m = tmp4;
 		
 		//Current median approximation is this Quaternion
 		Quaternion m = this;
@@ -819,7 +821,7 @@ public class Quaternion implements Serializable {
 				dist_mk_qi = tmp3.len();
 				
 				//If we're on top of one of the input Vector3s, it's the median, return it
-				if(dist_mk_qi < 0.0001f){
+				if(dist_mk_qi < 0.001f){
 					m.set(q_i);
 					return this;
 				}
@@ -842,7 +844,7 @@ public class Quaternion implements Serializable {
 			prev_m.set(m);
 			k++;
 			
-		}while(epsilon > 0.0001f);
+		}while(epsilon > 0.001f);
 		
 		return this;
 	}
@@ -859,7 +861,7 @@ public class Quaternion implements Serializable {
 	public Quaternion median (Quaternion[] q, float[] w) {
 		
 		//Previous median approximation
-		Quaternion prev_m = new Quaternion();
+		Quaternion prev_m = tmp4;
 		
 		//Current median approximation is this Quaternion
 		Quaternion m = this;
@@ -886,7 +888,7 @@ public class Quaternion implements Serializable {
 				dist_mk_qi = tmp3.len();
 				
 				//If we're on top of one of the input Vector3s, it's the median, return it
-				if(dist_mk_qi < 0.0001f){
+				if(dist_mk_qi < 0.001f){
 					m.set(q[i]);
 					return this;
 				}
@@ -909,7 +911,7 @@ public class Quaternion implements Serializable {
 			prev_m.set(m);
 			k++;
 			
-		}while(epsilon > 0.0001f);
+		}while(epsilon > 0.001f);
 		
 		return this;
 	}

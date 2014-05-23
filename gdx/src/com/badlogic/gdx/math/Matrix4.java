@@ -19,6 +19,8 @@ package com.badlogic.gdx.math;
 import java.io.Serializable;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 /** Encapsulates a <a href="http://en.wikipedia.org/wiki/Row-major_order#Column-major_order">column major</a> 4 by 4 matrix. Like
  * the {@link Vector3} class it allows the chaining of methods by returning a reference to itself. For example:
@@ -75,6 +77,10 @@ public class Matrix4 implements Serializable {
 	public final float tmp[] = new float[16];
 	public final float val[] = new float[16];
 
+	private static final Pool<Vector3> medianSclPool = Pools.get(Vector3.class);
+	private static final Pool<Vector3> medianTrnPool = Pools.get(Vector3.class);
+	private static final Pool<Quaternion> medianRotPool = Pools.get(Quaternion.class);
+	
 	/** Constructs an identity matrix */
 	public Matrix4 () {
 		val[M00] = 1f;
@@ -996,9 +1002,9 @@ public class Matrix4 implements Serializable {
 
 		//Get components
 		for(int i=0;i<t.length;i++){
-			scales[i] = t[i].getScale(new Vector3());
-			translations[i] = t[i].getTranslation(new Vector3());
-			rotations[i] = t[i].getRotation(new Quaternion());
+			scales[i] = t[i].getScale(medianSclPool.obtain());
+			translations[i] = t[i].getTranslation(medianTrnPool.obtain());
+			rotations[i] = t[i].getRotation(medianRotPool.obtain());
 		}
 
 		//Calculate medians
@@ -1011,6 +1017,13 @@ public class Matrix4 implements Serializable {
 			setToScaling(tmpVec.median(scales,w));
 			rotate(quat.median(rotations,w));
 			setTranslation(tmpVec.median(translations,w));
+		}
+		
+		//Free borrowed vectors and quaternions
+		for(int i=0;i<t.length;i++){
+			medianSclPool.free(scales[i]);
+			medianTrnPool.free(translations[i]);
+			medianRotPool.free(rotations[i]);
 		}
 
 		return this;

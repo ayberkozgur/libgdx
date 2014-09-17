@@ -16,8 +16,10 @@
 
 package com.badlogic.gdx.math;
 
+import java.io.Serializable;
+
 /** @author Xoppa */
-public class CatmullRomSpline<T extends Vector<T>> implements Path<T> {
+public class CatmullRomSpline<T extends Vector<T>> implements Path<T>, Serializable {
 	/** Calculates the catmullrom value for the given position (t).
 	 * @param out The Vector to set to the result.
 	 * @param t The position (0<=t<=1) on the spline

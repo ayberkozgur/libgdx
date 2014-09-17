@@ -1002,9 +1002,18 @@ public class Matrix4 implements Serializable {
 
 		//Get components
 		for(int i=0;i<t.length;i++){
-			scales[i] = t[i].getScale(medianSclPool.obtain());
-			translations[i] = t[i].getTranslation(medianTrnPool.obtain());
-			rotations[i] = t[i].getRotation(medianRotPool.obtain());
+			Vector3 scl = medianSclPool.obtain();
+			if(scl == null)
+				scl = new Vector3();
+			scales[i] = t[i].getScale(scl);
+			Vector3 trn = medianTrnPool.obtain();
+			if(trn == null)
+				trn = new Vector3();
+			translations[i] = t[i].getTranslation(trn);
+			Quaternion rot = medianRotPool.obtain();
+			if(rot == null)
+				rot = new Quaternion();
+			rotations[i] = t[i].getRotation(rot);
 		}
 
 		//Calculate medians
